@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { UserService } from 'src/user/strategies/user.service';
 import { AuthService } from './strategies/auth.service';
 import { GoogleAuthGuard } from '../common/guards/google.guard';
+import configuration from 'src/config/configuration';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +29,6 @@ export class AuthController {
         picture: user.picture,
       });
     }
-    return res.redirect('/');
+    return res.redirect(configuration().googleRedirect);
   }
 }
