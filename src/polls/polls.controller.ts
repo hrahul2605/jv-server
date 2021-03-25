@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { PollsBodyDto, PollsDeleteDto } from './dto/polls.dto';
 import { PollsService } from './strategies/polls.service';
 
@@ -7,8 +15,8 @@ export class PollsController {
   constructor(private readonly pollsService: PollsService) {}
 
   @Get(':id')
-  async getPoll(@Param() params) {
-    const data = await this.pollsService.getPoll(params.id);
+  async getPoll(@Param('id', ParseUUIDPipe) id: string) {
+    const data = await this.pollsService.getPoll(id);
     return { data };
   }
 
