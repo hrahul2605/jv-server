@@ -12,6 +12,9 @@ export class RivalsEntity {
   @Column({ type: 'integer', default: 0 })
   votes: number;
 
+  @Column({ type: 'jsonb', default: [] })
+  users: string[];
+
   @ManyToOne(() => PollsEntity, (polls) => polls.id, { onDelete: 'CASCADE' })
   polls: PollsEntity;
 }

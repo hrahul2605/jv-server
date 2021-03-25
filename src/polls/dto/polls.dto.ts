@@ -8,7 +8,7 @@ export abstract class AbstractClass {
   description: string;
 
   @IsString()
-  userID: string;
+  googleID: string;
 }
 
 export class RivalsObject {

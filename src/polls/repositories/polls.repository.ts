@@ -7,7 +7,14 @@ export class PollsRepository extends Repository<PollsEntity> {
   async getPollById(id: string) {
     try {
       const poll = await this.findOne(id, { relations: ['rivals'] });
-      return poll;
+      return {
+        title: poll.title,
+        id: poll.id,
+        description: poll.description,
+        rivals: poll.rivals.map((item) => {
+          return { id: item.id, title: item.title, votes: item.votes };
+        }),
+      };
     } catch (e) {
       console.log(e);
     }

@@ -6,7 +6,7 @@
   "password": "",
   "database": "jv",
   "entities": ["dist/**/*.entity{.ts,.js}"],
-  "synchronize": true,
+  "synchronize": false,
   "migrationsTableName": "migrations",
   "migrations": ["database/migrations/*.js"],
   "cli": {

@@ -14,7 +14,7 @@ export class PollsEntity {
   id: string;
 
   @Column({ type: 'text' })
-  userID: string;
+  googleID: string;
 
   @Column({ type: 'text', unique: true })
   title: string;
@@ -22,12 +22,15 @@ export class PollsEntity {
   @Column({ type: 'text' })
   description: string;
 
+  @Column({ type: 'jsonb', default: [] })
+  votedUsers: string[];
+
   @OneToMany(() => RivalsEntity, (rivals) => rivals.polls)
   @JoinColumn()
   rivals: RivalsEntity[];
 
   constructor(data?: PollsDto) {
-    this.userID = data?.userID;
+    this.googleID = data?.googleID;
     this.title = data?.title;
     this.description = data?.description;
   }
