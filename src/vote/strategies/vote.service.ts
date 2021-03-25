@@ -32,11 +32,13 @@ export class VoteService {
           id: final.id,
           title: final.title,
           votes: final.votes,
+          googleID,
+          success: true,
         };
       }
-      return null;
+      return { googleID, success: false };
     } catch (e) {
-      return null;
+      return { googleID, success: false };
     }
   }
 }
