@@ -25,6 +25,9 @@ export class PollsEntity {
   @Column({ type: 'jsonb', default: [] })
   votedUsers: string[];
 
+  @Column({ type: 'integer', default: 0 })
+  voteCount: number;
+
   @OneToMany(() => RivalsEntity, (rivals) => rivals.polls)
   @JoinColumn()
   rivals: RivalsEntity[];

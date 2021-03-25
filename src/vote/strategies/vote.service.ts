@@ -16,6 +16,7 @@ export class VoteService {
       if (!poll.votedUsers.includes(googleID)) {
         await this.pollsRepository.save({
           ...poll,
+          voteCount: poll.voteCount + 1,
           votedUsers: poll.votedUsers.concat(googleID),
         });
 
