@@ -8,10 +8,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { VoteService } from './strategies/vote.service';
 
 @WebSocketGateway({ transports: ['websocket'] })
 export class VoteGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private readonly voteService: VoteService) {}
+
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('VoteGateway');
 
@@ -22,11 +25,18 @@ export class VoteGateway
   }
 
   @SubscribeMessage('addVote')
-  public addVote(
+  public async addVote(
     client: Socket,
     args: { roomID: string; voteID: string; googleID: string },
   ) {
-    this.logger.log(args);
+    if (args.roomID && args.voteID && args.googleID) {
+      const rival = await this.voteService.addVote(
+        args.voteID,
+        args.googleID,
+        args.roomID,
+      );
+      this.server.to(args.roomID).emit('voteUpdate', rival);
+    }
   }
 
   afterInit() {
