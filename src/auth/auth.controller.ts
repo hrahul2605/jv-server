@@ -4,6 +4,7 @@ import { UserService } from 'src/user/strategies/user.service';
 import { AuthService } from './strategies/auth.service';
 import { GoogleAuthGuard } from '../common/guards/google.guard';
 import configuration from 'src/config/configuration';
+import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -30,5 +31,12 @@ export class AuthController {
       });
     }
     return res.redirect(configuration().googleRedirect);
+  }
+
+  @Get('logout')
+  @UseGuards(AuthenticatedGuard)
+  async logoutUser(@Req() req) {
+    req.logout();
+    return { success: true };
   }
 }
