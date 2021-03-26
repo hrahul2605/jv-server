@@ -14,6 +14,7 @@ export class PollsRepository extends Repository<PollsEntity> {
         rivals: poll.rivals.map((item) => {
           return { id: item.id, title: item.title, votes: item.votes };
         }),
+        voteCount: poll.voteCount,
       };
     } catch (e) {
       console.log(e);

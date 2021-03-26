@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PollsBodyDto } from '../dto/polls.dto';
 import { PollsRepository } from '../repositories/polls.repository';
 import { RivalsRepository } from '../repositories/rivals.repository';
@@ -30,7 +34,12 @@ export class PollsService {
 
       return { id: savedPollData.id };
     } catch (e) {
-      throw new InternalServerErrorException(e);
+      if (e.code === '23505')
+        throw new BadRequestException({
+          success: false,
+          message: 'Poll already exists with same title.',
+        });
+      else throw new InternalServerErrorException(e);
     }
   }
 
