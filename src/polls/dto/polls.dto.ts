@@ -1,4 +1,4 @@
-import { ArrayMinSize, ArrayNotEmpty, IsString } from 'class-validator';
+import { ArrayMinSize, ArrayNotEmpty, IsDate, IsString } from 'class-validator';
 
 export abstract class AbstractClass {
   @IsString()
@@ -9,6 +9,12 @@ export abstract class AbstractClass {
 
   @IsString()
   googleID: string;
+
+  @IsDate()
+  startTime: Date;
+
+  @IsDate()
+  endTime: Date;
 }
 
 export class RivalsObject {

@@ -28,6 +28,12 @@ export class PollsEntity {
   @Column({ type: 'integer', default: 0 })
   voteCount: number;
 
+  @Column({ type: 'timestamptz' })
+  startTime: Date;
+
+  @Column({ type: 'timestamptz' })
+  endTime: Date;
+
   @OneToMany(() => RivalsEntity, (rivals) => rivals.polls)
   @JoinColumn()
   rivals: RivalsEntity[];
@@ -36,5 +42,7 @@ export class PollsEntity {
     this.googleID = data?.googleID;
     this.title = data?.title;
     this.description = data?.description;
+    this.startTime = data?.startTime;
+    this.endTime = data?.endTime;
   }
 }

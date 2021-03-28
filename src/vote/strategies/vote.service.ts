@@ -12,7 +12,23 @@ export class VoteService {
   async addVote(id: string, googleID: string, pollId: string) {
     try {
       const poll = await this.pollsRepository.findOne(pollId);
+      const date = new Date();
 
+      if (date > poll.endTime) {
+        return {
+          success: false,
+          message: 'Voting Period is over.',
+          googleID,
+        };
+      }
+
+      if (date < poll.startTime) {
+        return {
+          success: false,
+          message: 'Voting Period has not started yet.',
+          googleID,
+        };
+      }
       if (!poll.votedUsers.includes(googleID)) {
         await this.pollsRepository.save({
           ...poll,
@@ -35,11 +51,20 @@ export class VoteService {
           votes: final.votes,
           googleID,
           success: true,
+          message: 'Your vote has been counted successfully',
         };
       }
-      return { googleID, success: false };
+      return {
+        success: false,
+        message: 'Only 1 vote per user allowed.',
+        googleID,
+      };
     } catch (e) {
-      return { googleID, success: false };
+      return {
+        success: false,
+        message: 'Server Error. Please Try Again',
+        googleID,
+      };
     }
   }
 }

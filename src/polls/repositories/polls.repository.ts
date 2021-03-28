@@ -7,6 +7,7 @@ export class PollsRepository extends Repository<PollsEntity> {
   async getPollById(id: string) {
     try {
       const poll = await this.findOne(id, { relations: ['rivals'] });
+      // @TODO: write the correct query builder for this
       return {
         title: poll.title,
         id: poll.id,
@@ -15,6 +16,8 @@ export class PollsRepository extends Repository<PollsEntity> {
           return { id: item.id, title: item.title, votes: item.votes };
         }),
         voteCount: poll.voteCount,
+        startTime: poll.startTime,
+        endTime: poll.endTime,
       };
     } catch (e) {
       console.log(e);
