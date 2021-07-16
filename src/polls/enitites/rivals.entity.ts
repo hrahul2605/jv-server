@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from 'src/user/entities/user.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { PollsEntity } from './polls.entity';
 
 @Entity('rivals')
@@ -12,8 +20,9 @@ export class RivalsEntity {
   @Column({ type: 'integer', default: 0 })
   votes: number;
 
-  @Column({ type: 'jsonb', default: [] })
-  users: string[];
+  @ManyToMany(() => UserEntity, (user) => user.rivals)
+  @JoinTable()
+  users: UserEntity[];
 
   @ManyToOne(() => PollsEntity, (polls) => polls.id, { onDelete: 'CASCADE' })
   polls: PollsEntity;

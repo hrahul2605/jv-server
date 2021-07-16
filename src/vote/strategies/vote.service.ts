@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PollsRepository } from 'src/polls/repositories/polls.repository';
 import { RivalsRepository } from 'src/polls/repositories/rivals.repository';
+import { UserRepository } from 'src/user/repositories/user.repository';
 
 @Injectable()
 export class VoteService {
   constructor(
     private readonly rivalsRepository: RivalsRepository,
     private readonly pollsRepository: PollsRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async addVote(id: string, googleID: string, pollId: string) {
@@ -37,12 +39,15 @@ export class VoteService {
         });
 
         const rivalToBeVoted = await this.rivalsRepository.findOne(id);
+        const votingUser = await this.userRepository.findByGoogleId(googleID);
+
         const updatedRival = this.rivalsRepository.create({
           ...rivalToBeVoted,
           votes: rivalToBeVoted.votes + 1,
-          users: rivalToBeVoted.users.concat(googleID),
+          users: rivalToBeVoted.users
+            ? [...rivalToBeVoted.users, votingUser]
+            : [votingUser],
         });
-
         const final = await this.rivalsRepository.save(updatedRival);
 
         return {

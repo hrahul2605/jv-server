@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { RivalsEntity } from 'src/polls/enitites/rivals.entity';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
 export class UserEntity {
@@ -16,4 +17,9 @@ export class UserEntity {
 
   @Column({ type: 'text' })
   email: string;
+
+  @ManyToMany(() => RivalsEntity, (rivals) => rivals.users, {
+    onDelete: 'CASCADE',
+  })
+  rivals: RivalsEntity[];
 }
