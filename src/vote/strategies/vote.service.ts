@@ -11,16 +11,20 @@ export class VoteService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async addVote(id: string, googleID: string, pollId: string) {
+  async addVote(id: string, userId: string, pollId: string) {
     try {
-      const poll = await this.pollsRepository.findOne(pollId);
+      const poll = await this.pollsRepository.findOne(pollId, {
+        relations: ['votedUsers'],
+      });
+      const votingUser = await this.userRepository.findOne(userId);
+
       const date = new Date();
 
       if (date > poll.endTime) {
         return {
           success: false,
           message: 'Voting Period is over.',
-          googleID,
+          userId,
         };
       }
 
@@ -28,18 +32,30 @@ export class VoteService {
         return {
           success: false,
           message: 'Voting Period has not started yet.',
-          googleID,
+          userId,
         };
       }
-      if (!poll.votedUsers.includes(googleID)) {
+
+      const { votedUsers } = poll;
+
+      let found = false;
+
+      if (votedUsers) {
+        const idx = votedUsers.findIndex((u) => u.id === userId);
+
+        if (idx !== -1) found = true;
+      }
+
+      if (!found) {
         await this.pollsRepository.save({
           ...poll,
           voteCount: poll.voteCount + 1,
-          votedUsers: poll.votedUsers.concat(googleID),
+          votedUsers: poll.votedUsers
+            ? [...poll.votedUsers, votingUser]
+            : [votingUser],
         });
 
         const rivalToBeVoted = await this.rivalsRepository.findOne(id);
-        const votingUser = await this.userRepository.findByGoogleId(googleID);
 
         const updatedRival = this.rivalsRepository.create({
           ...rivalToBeVoted,
@@ -54,7 +70,7 @@ export class VoteService {
           id: final.id,
           title: final.title,
           votes: final.votes,
-          googleID,
+          userId,
           success: true,
           message: 'Your vote has been counted successfully',
         };
@@ -62,13 +78,13 @@ export class VoteService {
       return {
         success: false,
         message: 'Only 1 vote per user allowed.',
-        googleID,
+        userId,
       };
     } catch (e) {
       return {
         success: false,
         message: 'Server Error. Please Try Again',
-        googleID,
+        userId,
       };
     }
   }
