@@ -27,12 +27,12 @@ export class VoteGateway
   @SubscribeMessage('addVote')
   public async addVote(
     client: Socket,
-    args: { roomID: string; voteID: string; googleID: string },
+    args: { roomID: string; voteID: string; userId: string },
   ) {
-    if (args.roomID && args.voteID && args.googleID) {
+    if (args.roomID && args.voteID && args.userId) {
       const rival = await this.voteService.addVote(
         args.voteID,
-        args.googleID,
+        args.userId,
         args.roomID,
       );
       this.server.to(args.roomID).emit('voteUpdate', rival);

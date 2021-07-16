@@ -1,7 +1,10 @@
+import { UserEntity } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -14,7 +17,7 @@ export class PollsEntity {
   id: string;
 
   @Column({ type: 'text' })
-  googleID: string;
+  userId: string;
 
   @Column({ type: 'text', unique: true })
   title: string;
@@ -22,8 +25,9 @@ export class PollsEntity {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'jsonb', default: [] })
-  votedUsers: string[];
+  @ManyToMany(() => UserEntity, (user) => user.polls)
+  @JoinTable()
+  votedUsers: UserEntity[];
 
   @Column({ type: 'integer', default: 0 })
   voteCount: number;
@@ -39,7 +43,7 @@ export class PollsEntity {
   rivals: RivalsEntity[];
 
   constructor(data?: PollsDto) {
-    this.googleID = data?.googleID;
+    this.userId = data?.userId;
     this.title = data?.title;
     this.description = data?.description;
     this.startTime = data?.startTime;

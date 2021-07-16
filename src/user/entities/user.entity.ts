@@ -1,13 +1,11 @@
+import { PollsEntity } from 'src/polls/enitites/polls.entity';
 import { RivalsEntity } from 'src/polls/enitites/rivals.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('users')
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ type: 'text', unique: true, nullable: false })
-  googleID: string;
+  @PrimaryColumn({ type: 'text', unique: true, nullable: false })
+  id: string;
 
   @Column({ type: 'text' })
   name: string;
@@ -22,4 +20,9 @@ export class UserEntity {
     onDelete: 'CASCADE',
   })
   rivals: RivalsEntity[];
+
+  @ManyToMany(() => PollsEntity, (poll) => poll.votedUsers, {
+    onDelete: 'CASCADE',
+  })
+  polls: PollsEntity[];
 }

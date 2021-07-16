@@ -24,7 +24,7 @@ export class AuthController {
     const user = this.authService.googleLogin(req);
     if (user) {
       await this.userService.createUser({
-        googleID: user.googleID,
+        id: user.id,
         name: user.name,
         email: user.email,
         picture: user.picture,

@@ -8,7 +8,7 @@ export abstract class AbstractClass {
   description: string;
 
   @IsString()
-  googleID: string;
+  userId: string;
 
   @IsDate()
   startTime: Date;

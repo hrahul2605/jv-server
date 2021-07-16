@@ -6,8 +6,8 @@ import { UserRepository } from '../repositories/user.repository';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async findOne(googleID: string): Promise<UserEntity> {
-    return await this.userRepository.findByGoogleId(googleID);
+  async findOne(id: string): Promise<UserEntity> {
+    return await this.userRepository.findOne(id);
   }
 
   async createUser(user): Promise<UserEntity> {
